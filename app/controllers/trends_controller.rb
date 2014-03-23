@@ -69,6 +69,6 @@ class TrendsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def trend_params
-      params.require(:trend).permit(:name, :site_id, :category_id, :category_name, :created_at)
+      params.require(:trend).permit(:name, :site_id, :category_id, :category_name, :created_at, :order)
     end
 end
