@@ -7,6 +7,7 @@
       <th>Name</th>
       <th>Parent</th>
       <th>Site</th>
+      <th>Level</th>
       <th></th>
       <th></th>
       <th></th>
@@ -20,6 +21,7 @@
         <td><%= category.name %></td>
         <td><%= category.parent_id %></td>
         <td><%= category.site_id %></td>
+        <td><%= category.level %></td>        
         <td><%= link_to 'Show', category %></td>
         <td><%= link_to 'Edit', edit_category_path(category) %></td>
         <td><%= link_to 'Destroy', category, method: :delete, data: { confirm: 'Are you sure?' } %></td>

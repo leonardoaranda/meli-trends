@@ -50,24 +50,36 @@ class MercadolibreController < ApplicationController
 		end
 	end
 
-	def save_categories(site_id,max_depth)
+	def process_categories(site_id,max_depth)
 		@max_depth = max_depth
 		categories = get_site_categories(site_id)
 		categories.each do |category|
 			level = 1
-			puts level.to_s+'root '+category['name']+'-'+category['id']
-			process_children_categories(category,level)
+			puts level.to_s+'root '+category['name']+'-'+category['id']			
+			save_category(category['id'],category['name'],site_id,nil,level)
+			process_children_categories(category,level,site_id)
 		end
 	end
 
-	def process_children_categories(parent,level)
+	def process_children_categories(parent,level,site_id)
 		level += 1
 		if level <= @max_depth
 			children_categories = get_children_categories(parent['id'])
 			children_categories.each do |children|
 				puts level.to_s+'children '+children['name']+'-'+children['id']
-				process_children_categories(children,level)
-			end	
+				save_category(children['id'],children['name'],site_id,parent['id'],level)				
+				process_children_categories(children,level,site_id)
+			end
 		end
+	end
+
+	def save_category(category_id,name,site_id,parent_id,level)
+		categ = Category.new
+		categ.category_id = category_id
+		categ.name = name
+		categ.site_id = site_id
+		categ.parent_id = parent_id
+		categ.level = level
+		categ.save	
 	end
 end
