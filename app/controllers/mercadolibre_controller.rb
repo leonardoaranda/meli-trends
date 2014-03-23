@@ -22,8 +22,7 @@ class MercadolibreController < ApplicationController
 	end
 
 	def main_categories(site_id)
-		categories = get_children_categories('MLA1000')
-		#categories = get_site_categories(site_id)
+		categories = get_site_categories(site_id)
 		categories.each do |category|
 			category_trends = get_category_trends(category['id'],site_id)
 			puts '#####'+category['name']+'#####'			
@@ -45,4 +44,5 @@ class MercadolibreController < ApplicationController
 			build_tree(children['id'],category_id,children_category_trends)
 		end
 	end
+
 end
