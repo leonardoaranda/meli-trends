@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @trend.name %>
+</p>
+
+<p>
+  <strong>Site:</strong>
+  <%= @trend.site_id %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @trend.category_id %>
+</p>
+
+<p>
+  <strong>Category name:</strong>
+  <%= @trend.category_name %>
+</p>
+
+<p>
+  <strong>Created at:</strong>
+  <%= @trend.created_at %>
+</p>
+
+<%= link_to 'Edit', edit_trend_path(@trend) %> |
+<%= link_to 'Back', trends_path %>
