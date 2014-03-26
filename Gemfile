@@ -3,6 +3,10 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.3'
 
+gem 'mongo'
+
+gem 'bson_ext'
+
 # Use postgresql as the database for Active Record
 gem 'pg'
 

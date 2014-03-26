@@ -11,29 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140323180744) do
+ActiveRecord::Schema.define(version: 20140323172436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "categories", force: true do |t|
     t.string   "category_id"
-    t.string   "name"
+    t.string   "category_name"
     t.string   "parent_id"
     t.string   "site_id"
+    t.string   "level"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "level"
   end
-
-  create_table "trends", force: true do |t|
-    t.string   "name"
-    t.string   "site_id"
-    t.integer  "category_id"
-    t.string   "category_name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "order"
-  end
-
+  
 end

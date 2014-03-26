@@ -32,11 +32,11 @@ class MercadolibreController < ApplicationController
 			level = 1
 			category_trends = get_category_trends(category['id'],site_id)
 			puts '#####'+category['name']+'#####'			
-			tree_bound(category['id'],nil,nil,level)
+			tree_bound(category['id'],nil,nil,level,site_id)
 		end
 	end
 
-	def tree_bound(category_id,parent_id,parent_trends,level)
+	def tree_bound(category_id,parent_id,parent_trends,level,site_id)
 		level += 1
 		children_categories = get_children_categories(category_id)
 		children_categories.each do |children|
@@ -44,9 +44,9 @@ class MercadolibreController < ApplicationController
 				puts 'SKIPPING '+children['id']+' '+children['name']
 				next
 			end
-			children_category_trends = get_category_trends(children['id'],'MLA')
+			children_category_trends = get_category_trends(children['id'],site_id)
 			puts '#####'+children['name']+'#####'
-			tree_bound(children['id'],category_id,children_category_trends,level)
+			tree_bound(children['id'],category_id,children_category_trends,level,site_id)
 		end
 	end
 
@@ -76,7 +76,7 @@ class MercadolibreController < ApplicationController
 	def save_category(category_id,name,site_id,parent_id,level)
 		categ = Category.new
 		categ.category_id = category_id
-		categ.name = name
+		categ.category_name = name
 		categ.site_id = site_id
 		categ.parent_id = parent_id
 		categ.level = level
