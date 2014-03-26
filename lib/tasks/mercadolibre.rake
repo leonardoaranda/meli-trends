@@ -14,7 +14,7 @@ desc "Cache categories from MercadoLibre"
     Category.all.find_each do |category|
       meli = ActionController::Base::MercadolibreController.new
       meli_trends = meli.get_category_trends(category['category_id'],category['site_id'])
-      category_trend = {
+      category_trends = {
       	:site_id => category['site_id'],
       	:category_id => category['category_id'],
       	:category_name => category['category_name'],
@@ -29,8 +29,8 @@ desc "Cache categories from MercadoLibre"
           trends_list << {:keyword => trend['keyword'],:url => trend['url'],:order => x }
           x+=1
         end
-        category_trend[:trends] = trends_list
-        db['trends'].insert(category_trend)
+        category_trends[:trends] = trends_list
+        db['category_trends'].insert(category_trend)
         puts 'Category '+category['category_id']+' was succesfully processed'
       end
     end
