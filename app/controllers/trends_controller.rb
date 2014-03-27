@@ -1,13 +1,11 @@
 class TrendsController < ApplicationController
 	#Needs refactor. Decouple.
 	def index_trends()
-		document = {}
 		db = get_mongodb_connection()
 		coll = db['category_trends']
 		trends_to_index = coll.find({:status => nil})
 		trends_to_index.each do |category_trends|
 			puts 'Trying to index category '+category_trends['category_id']
-			bodies = []
 			ids_to_update = []
 			category_trends['trends'].each do |trend|
 				document = {
@@ -20,17 +18,10 @@ class TrendsController < ApplicationController
 					:url => trend['url'],
 					:order => trend['order']
 				}
-				body = {
-					:index => { 
-						:_index => 'meli_trends', 
-						:_type => 'trend'
-						},
-					:data => document
-				}
 				ids_to_update << category_trends['_id']
-				bodies << body
+				#TODO bulk insert. Currently doesnt work.
+				index_elasticsearch_document(document)
 			end
-			index_elasticsearch_document(bodies)
 			puts 'Category '+category_trends['category_id']+' was succesfully indexed'
 			coll.update({'_id' => {'$in' => ids_to_update}},{'$set'=>{'status'=>'indexed'}})
 			puts 'Category flagged as indexed'
@@ -51,9 +42,9 @@ class TrendsController < ApplicationController
 		return client
 	end
 
-	def index_elasticsearch_document(bodies)
+	def index_elasticsearch_document(document)
 		client = get_elasticsearch_client()
-		client.bulk body: bodies
+		client.index index: 'meli_trends', type: 'trend', body: document
 	end
 
 end
