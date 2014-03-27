@@ -73,6 +73,31 @@ class MercadolibreController < ApplicationController
 		end
 	end
 
+	def process_category_trends(category_id,site_id)
+		x=1
+		trends_list = []
+		category_trends = get_category_trends(category_id,site_id)
+		processed_category_trends = {
+			:site_id => site_id,
+			:category_id => category_id,
+			:snapshot => Time.now
+		}
+		if !category_trends.nil?
+			category_trends.each do |trend|
+				trends_list << {:keyword => trend['keyword'],:url => trend['url'],:order => x }
+				x+=1
+			end
+		end
+		processed_category_trends[:trends] = trends_list
+		return processed_category_trends
+	end
+
+	def save_category_trends(processed_category_trends)
+		db  = Mongo::Connection::new.db('meli_trends')
+		coll = db['category_trends']
+		coll.insert(processed_category_trends)
+	end
+
 	def save_category(category_id,name,site_id,parent_id,level)
 		categ = Category.new
 		categ.category_id = category_id
