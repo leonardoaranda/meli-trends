@@ -23,7 +23,7 @@ class TrendsController < ApplicationController
 				ids_to_update << category_trends['_id']
 				documents << document
 			end
-			index_elasticsearch_document(documents)
+			index_elasticsearch_document(documents) unless documents.length < 1
 			puts 'Category '+category_trends['category_id']+' was succesfully indexed'
 			coll.update({'_id' => {'$in' => ids_to_update}},{'$set'=>{'status'=>'indexed'}})
 			puts 'Category flagged as indexed'
@@ -45,6 +45,7 @@ class TrendsController < ApplicationController
 	end
 
 	def index_elasticsearch_document(documents)
+		puts 'ok index'
 		client = get_elasticsearch_client()
 		client.index(:meli_trends).bulk_index(documents)
 	end
