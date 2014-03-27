@@ -1,5 +1,5 @@
 namespace :mercadolibre do
-desc "Cache categories from MercadoLibre"
+  desc "Cache categories from MercadoLibre"
   task get_categories: :environment do
     ActiveRecord::Base.connection.execute("TRUNCATE categories")
   	meli = ActionController::Base::MercadolibreController.new
@@ -16,4 +16,11 @@ desc "Cache categories from MercadoLibre"
       puts 'Category '+category['category_id']+' was succesfully processed'
     end
   end
+
+  desc "Trends to ElasticSearch"
+  task index_trends: :environment do
+    trends = ActionController::Base::TrendsController.new
+    trends.index_trends()
+  end
+
 end
