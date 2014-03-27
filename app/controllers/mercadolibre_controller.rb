@@ -93,7 +93,7 @@ class MercadolibreController < ApplicationController
 	end
 
 	def save_category_trends(processed_category_trends)
-		db  = Mongo::Connection::new.db('meli_trends')
+		db  = get_mongodb_connection()
 		coll = db['category_trends']
 		coll.insert(processed_category_trends)
 	end
@@ -105,6 +105,14 @@ class MercadolibreController < ApplicationController
 		categ.site_id = site_id
 		categ.parent_id = parent_id
 		categ.level = level
-		categ.save	
+		categ.save
+	end
+
+	def get_mongodb_connection()
+		db = URI.parse(ENV['MONGOHQ_URL'])
+		db_name = db.path.gsub(/^\//, '')
+		db_connection = Mongo::Connection.new(db.host, db.port).db(db_name)
+		db_connection.authenticate(db.user, db.password) unless (db.user.nil? || db.user.nil?)	
+		return db_connection
 	end
 end
