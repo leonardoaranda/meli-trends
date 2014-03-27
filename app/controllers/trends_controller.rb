@@ -6,6 +6,7 @@ class TrendsController < ApplicationController
 		coll = db['category_trends']
 		trends_to_index = coll.find({:status => nil})
 		trends_to_index.each do |category_trends|
+			puts 'Trying to index category '+category_trends['category_id']
 			bodies = []
 			ids_to_update = []
 			category_trends['trends'].each do |trend|
