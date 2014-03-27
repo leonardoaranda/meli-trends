@@ -7,6 +7,7 @@ class TrendsController < ApplicationController
 		trends_to_index.each do |category_trends|
 			puts 'Trying to index category '+category_trends['category_id']
 			ids_to_update = []
+			documents = []
 			category_trends['trends'].each do |trend|
 				document = {
 					:object_id => category_trends['_id'],
@@ -16,12 +17,13 @@ class TrendsController < ApplicationController
 					:snapshot => category_trends['snapshot'],
 					:keyword => trend['keyword'],
 					:url => trend['url'],
-					:order => trend['order']
+					:order => trend['order'],
+					:_type => 'trend'
 				}
 				ids_to_update << category_trends['_id']
-				#TODO bulk insert. Currently doesnt work.
-				index_elasticsearch_document(document)
+				documents << document
 			end
+			index_elasticsearch_document(documents)
 			puts 'Category '+category_trends['category_id']+' was succesfully indexed'
 			coll.update({'_id' => {'$in' => ids_to_update}},{'$set'=>{'status'=>'indexed'}})
 			puts 'Category flagged as indexed'
@@ -38,13 +40,13 @@ class TrendsController < ApplicationController
 
 	def get_elasticsearch_client()
 		elasticsearch_url = ENV['ELASTICSEARCH_URL']
-		client = Elasticsearch::Client.new host: elasticsearch_url
+		client = Stretcher::Server.new('http://'+elasticsearch_url)
 		return client
 	end
 
-	def index_elasticsearch_document(document)
+	def index_elasticsearch_document(documents)
 		client = get_elasticsearch_client()
-		client.index index: 'meli_trends', type: 'trend', body: document
+		client.index(:meli_trends).bulk_index(documents)
 	end
 
 end

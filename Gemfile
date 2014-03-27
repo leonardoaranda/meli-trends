@@ -36,7 +36,7 @@ group :doc do
   gem 'sdoc', require: false
 end
 
-gem 'elasticsearch'
+gem 'stretcher'
 
 ruby '2.1.0'
 # Use ActiveModel has_secure_password
