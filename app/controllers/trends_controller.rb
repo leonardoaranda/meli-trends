@@ -6,7 +6,7 @@ class TrendsController < ApplicationController
 		coll = db['category_trends']
 		trends_to_index = coll.find({:status => nil})
 		trends_to_index.each do |category_trends|
-			documents = []
+			bodies = []
 			ids_to_update = []
 			category_trends['trends'].each do |trend|
 				document = {
@@ -19,13 +19,17 @@ class TrendsController < ApplicationController
 					:url => trend['url'],
 					:order => trend['order']
 				}
+				body = {
+					:index => { 
+						:_index => 'meli_trends', 
+						:_type => 'trend'
+						},
+					:data => document
+				}
 				ids_to_update << category_trends['_id']
-				documents << document
+				bodies << body
 			end
-			documents_to_index = {
-				:data => documents
-			}
-			index_elasticsearch_document(documents_to_index)
+			index_elasticsearch_document(bodies)
 			puts 'Category '+category_trends['category_id']+' was succesfully indexed'
 			coll.update({'_id' => {'$in' => ids_to_update}},{'$set'=>{'status'=>'indexed'}})
 			puts 'Category flagged as indexed'
@@ -46,9 +50,9 @@ class TrendsController < ApplicationController
 		return client
 	end
 
-	def index_elasticsearch_document(documents_to_index)
+	def index_elasticsearch_document(bodies)
 		client = get_elasticsearch_client()
-		client.index index: 'meli_trends', type: 'trend', body: documents_to_index
+		client.bulk body: bodies
 	end
 
 end
