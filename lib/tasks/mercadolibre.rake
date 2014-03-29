@@ -23,4 +23,15 @@ namespace :mercadolibre do
     trends.index_trends()
   end
 
+  desc "Trends Map Processor"
+  task trends_map_processor: :environment do
+    trends = ActionController::Base::TrendsController.new
+    trends.trend_map_processor()
+  end
+
+  desc "Trends Reduce Processor"
+  task trends_reduce_processor: :environment do
+    trends = ActionController::Base::TrendsController.new
+    trends.trend_reduce_processor()
+  end
 end
