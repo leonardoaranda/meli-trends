@@ -123,7 +123,7 @@ class TrendsController < ApplicationController
 			trend_keyword = trend['trend'].gsub(category_id,' ').gsub('_',' ')
 			trends_slope << {
 				:category_id => category_id,
-				:trend => trend_keyword.trim!,
+				:trend => trend_keyword.strip!,
 				:data => n,
 				:slope => trend_slope,
 				:compute_timestamp => Time.now
