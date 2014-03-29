@@ -54,6 +54,7 @@ class TrendsController < ApplicationController
 		map = Hash.new
 		db = get_mongodb_connection()
 		coll_tl = db['trends_timeline']
+		coll_tl.drop()
 		coll = db['category_trends']
 		coll.find().batch_size(100).each do |category_trends|
 			category_trends['trends'].each do |trend|
@@ -129,6 +130,7 @@ class TrendsController < ApplicationController
 			}
 		end
 		coll = db['trends_slope']
+		coll.drop()
 		coll.insert(trends_slope)
 	end
 end
